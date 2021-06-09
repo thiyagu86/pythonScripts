@@ -6,14 +6,18 @@ from csv import writer
 count=1
 IsFirstTime=True
 
-inputFile = 'CoveRunLogs/vuser_7.log'
+inputFile = 'C:/Users/reach/OneDrive/Desktop/ScriptingWork/CoveRunLogs/vuser_7.log'
 getHeroFp = open("getHeroData.log","w+")
 getPriorityIncidentFp = open("priorityIncidents.log","w+")
+incidentsReportFp = open("incidentsReport.log","w+")
+incidentsFp=open("incidents.log","w+")
 
 apiId1='getHeroData'
 apiId2='priorityIncidents'
+apiId3='incidentsReport'
+apiId4='incidents'
 
-apiIdList=['getHeroData','priorityIncidents']
+apiIdList=['getHeroData','priorityIncidents','incidentsReport','incidents']
 
 with open(inputFile, 'r') as file:
 	for line in file:
@@ -25,8 +29,20 @@ with open(inputFile, 'r') as file:
 		if apiId2 in line:
 			getPriorityIncidentFp.write(line)
 
+with open(inputFile, 'r') as file:
+	for line in file:
+		if apiId3 in line:
+			incidentsReportFp.write(line)
+
+with open(inputFile, 'r') as file:
+	for line in file:
+		if apiId4 in line:
+			incidentsFp.write(line)
+
 getHeroFp.close()
 getPriorityIncidentFp.close()
+incidentsReportFp.close()
+incidentsFp.close()
 
 #Lines of interest for getHeroData API are transffered to getHeroData File. 
 #start working on the isolating request and response times using internal ID

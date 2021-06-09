@@ -22,13 +22,13 @@ delimiter.delimiter=","
 file = open("ConsolidatedAPIdata.csv")
 file.readline()
 csv_reader=csv.reader(file,delimiter)
-wind,date=[],[]
-minTimeGHD, maxTimeGHD = [],[]
-minTimePI,maxTimePI = [],[]
-userEmail=""
+minTimeGHD = []
+minTimePI = []
+minTimeIR = []
+minTimeI = []
+userEmail= ""
 
 for row in csv_reader:
-	#print(row[4],row[5])
 	if(row[1] == "getHeroData"):
 		try:
 			minTimeGHD.append(float(row[4]))
@@ -40,16 +40,27 @@ for row in csv_reader:
 			minTimePI.append(float(row[4]))
 		except ValueError:
 			print ("error","on line",row)
+	elif(row[1]== "incidentsReport"):
+		try:
+			minTimeIR.append(float(row[4]))
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "incidents"):
+		try:
+			minTimeI.append(float(row[4]))
+		except ValueError:
+			print ("error","on line",row)
 
 averageGHD = Average(minTimeGHD)
 averagePI = Average(minTimePI)
-#print ("Minimum response time for getHeroData : ", min(minTimeGHD), "ms")
+averageIR = Average(minTimeIR)
+averageI = Average(minTimeI)
+
+
 minTimeGHDsecs=min(minTimeGHD)/1000
 print("Mininum response time for getHeroData: ",minTimeGHDsecs," secs")
-#print ("Maximum response time for getHeroData : ", max(minTimeGHD), "ms")
 maxTimeGHDsecs = max(minTimeGHD)/1000
 print ("Maximum response time for getHeroData : ", maxTimeGHDsecs, "secs")
-#print("Average response time for getHeroData  : ", round(averageGHD,2),"ms")
 AvgGHDSecs = round(averageGHD,2)/1000
 print ("Average response time for getHeroData : ", AvgGHDSecs, "secs")
 GHDData = []
@@ -61,7 +72,7 @@ GHDData.append(maxTimeGHDsecs)
 GHDData.append(AvgGHDSecs)
 send2CSV(GHDData)
 count += 1
-#print ("Minimum response time for priorityIncident : ", min(minTimePI),"ms")
+
 minTimePIsecs=min(minTimePI)/1000
 print ("Minimum response time for priorityIncident : ", minTimePIsecs,"secs")
 #print ("Maximum response time for priorityIncident : ", max(minTimePI),"ms")
@@ -69,7 +80,7 @@ maxTimePIsecs=max(minTimePI)/1000
 print ("Maximum response time for priorityIncident : ", maxTimePIsecs,"secs")
 #print("Average response time for getHeroData : ", round(averagePI, 2),"ms")
 AvgPISecs = round(averagePI, 2)/1000
-print("Average response time for getHeroData : ", AvgPISecs,"secs")
+print("Average response time for priorityIncident : ", AvgPISecs,"secs")
 PIData =[]
 PIData.append(count)
 PIData.append("priorityIncidents")
@@ -78,3 +89,35 @@ PIData.append(minTimePIsecs)
 PIData.append(maxTimePIsecs)
 PIData.append(AvgPISecs)
 send2CSV(PIData)
+count += 1
+
+minTimeIRsecs=min(minTimeIR)/1000
+print ("Minimum response time for incidentsReport : ", minTimeIRsecs,"secs")
+maxTimeIRsecs=max(minTimeIR)/1000
+print ("Maximum response time for incidentsReport : ", maxTimeIRsecs,"secs")
+AvgIRSecs = round(averageIR, 2)/1000
+print("Average response time for incidentsReport : ", AvgIRSecs,"secs")
+IRData =[]
+IRData.append(count)
+IRData.append("incidentsReport")
+IRData.append(userEmail)
+IRData.append(minTimeIRsecs)
+IRData.append(maxTimeIRsecs)
+IRData.append(AvgIRSecs)
+send2CSV(IRData)
+count += 1
+
+minTimeIsecs=min(minTimeI)/1000
+print ("Minimum response time for incidents : ", minTimeIsecs,"secs")
+maxTimeIsecs=max(minTimeI)/1000
+print ("Maximum response time for incidents : ", maxTimeIsecs,"secs")
+AvgISecs = round(averageI, 2)/1000
+print("Average response time for incidents : ", AvgISecs,"secs")
+IData =[]
+IData.append(count)
+IData.append("incidents")
+IData.append(userEmail)
+IData.append(minTimeIsecs)
+IData.append(maxTimeIsecs)
+IData.append(AvgISecs)
+send2CSV(IData)
