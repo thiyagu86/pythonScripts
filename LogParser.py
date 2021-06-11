@@ -12,11 +12,6 @@ IsFirstTime=True
 Lock = threading.Lock()
 
 inputFile = 'C:/Users/reach/OneDrive/Desktop/ScriptingWork/CoveRunLogs/vuser_7.log'
-getHeroFp = open("getHeroData.log","w+")
-getPriorityIncidentFp = open("priorityIncidents.log","w+")
-incidentsReportFp = open("incidentsReport.log","w+")
-incidentsFp=open("incidents.log","w+")
-createServiceRequestFp=open("createServiceRequest.log","w+")
 
 #URL files
 samlssoFp=open("samlsso.log","w+")
@@ -27,8 +22,19 @@ apiId2='priorityIncidents'
 apiId3='incidentsReport'
 apiId4='incidents'
 apiId5='createServiceRequest'
+apiId6='businessServices'
+apiId7='catalogueItems'
+apiId8='codeList'
+apiId9='getIncident'
+apiId10='serviceRequests'
+apiId11='serviceRequestReport'
+apiId12='priorityServiceRequests'
+apiId13='getServiceRequest'
+apiId14='getDynamicJourneyMetadata'
 
-apiIdList=['getHeroData','priorityIncidents','incidentsReport','incidents','createServiceRequest']
+#apiIdList=['getHeroData','priorityIncidents','incidentsReport','incidents','createServiceRequest','businessServices','catalogueItems']
+apiIdList=[apiId1,apiId2,apiId3,apiId4,apiId5,apiId6,apiId7,apiId8,apiId9,apiId10,apiId11,apiId12,apiId13,apiId14]
+#apiIdList=[apiId9]
 
 urlId1='ciamsso.pre1.ciam.vodafone.com/samlsso'
 urlId2='portal/tickets'
@@ -37,36 +43,15 @@ urlIdlist=['samlsso','tickets']
 #urlId1='portal/tickets'
 #urlIdlist=['tickets']
 
-with open(inputFile, 'r') as file:
-	for line in file:
-		if apiId1 in line:
-			getHeroFp.write(line)
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if apiId2 in line:
-			getPriorityIncidentFp.write(line)
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if apiId3 in line:
-			incidentsReportFp.write(line)
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if apiId4 in line:
-			incidentsFp.write(line)
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if apiId5 in line:
-			createServiceRequestFp.write(line)
-
-getHeroFp.close()
-getPriorityIncidentFp.close()
-incidentsReportFp.close()
-incidentsFp.close()
-createServiceRequestFp.close()
+for apiId in apiIdList:
+	filename=apiId + '.log'
+	print(filename)
+	fp=open(filename,"w+")
+	with open(inputFile,'r') as file:
+		for line in file:
+			if (apiId in line):
+				fp.write(line)
+	fp.close()
 
 #URL data
 with open(inputFile, 'r') as file:
@@ -91,8 +76,6 @@ ticketsFp.close()
 
 #Lines of interest for getHeroData API are transffered to getHeroData File. 
 #start working on the isolating request and response times using internal ID
-getHeroDatadata = 'getHeroData.log'
-priorityIncidentsdata = 'priorityIncidents.log'
 timestr="ms"
 NA="Not applicable"
 
@@ -143,6 +126,7 @@ def findMatchingResp(apiId,line,tokens,linedata):
 	intId = tokens[7] +' ' + tokens[8]
 	reqMatch = ["Response",intId]
 	filename = apiId + ".log"
+
 	with open(filename,'r') as file:
 		for line in file:
 			if all(str in line for str in reqMatch):
@@ -185,7 +169,7 @@ def buildCSVdata(Reqlinedata,Resplinedata):
 	global count
 	if(len(Resplinedata) > 2):
 		if((Reqlinedata[2] == Resplinedata[2]) and (Reqlinedata[3] == Resplinedata[3])):
-			#print("Request {}: Api name: {}, Req time: {}, Rsp Time: {}, user-email:{}, userhash:{}".format(count,Reqlinedata[0],Reqlinedata[1],Resplinedata[1],Resplinedata[2],Resplinedata[3]))
+			print("Request {}: Api name: {}, Req time: {}, Rsp Time: {}, user-email:{}, userhash:{}".format(count,Reqlinedata[0],Reqlinedata[1],Resplinedata[1],Resplinedata[2],Resplinedata[3]))
 			csvdata = []
 			csvdata.append(count)
 			csvdata.append(Reqlinedata[0])
@@ -200,7 +184,7 @@ def buildCSVdata(Reqlinedata,Resplinedata):
 			csvdata.append(Resplinedata[2])
 			csvdata.append(Resplinedata[3])
 			csvdata.append(Resplinedata[4])
-			print("CsvData: ",csvdata)
+			#print("CsvData: ",csvdata)
 			send2CSV(csvdata)
 			count+=1
 
@@ -263,5 +247,5 @@ def consolidatedUrlProcessing():
 #GetHeroDataApi()
 consolidatedApiProcessing()
 #time.sleep(5)
-consolidatedUrlProcessing()
+#consolidatedUrlProcessing()
 #DeleteTempFiles()
