@@ -22,6 +22,17 @@ minTimePSR = []
 minTimeGSR = []
 minTimeGDJM = []
 
+#URLData
+#urlIdlist=['samlsso','tickets','acs','raise-journey','login','logout','keepsessionalive']
+
+minTimeSSO = []
+mintimeTICKETS = []
+minTimeACS = []
+minTimeRJ = []
+minTimeLIN = []
+minTimeLOUT = []
+minTimeKSL = []
+
 userEmail= ""
 
 def Average(dataLst):
@@ -34,11 +45,12 @@ def send2CSV(csvdata):
 	with open(filename, 'a',newline='') as csvfile:
 		csvwriter = csv.writer(csvfile) 
 		if(IsFirstTime == True):
-			headers = ['SerialNo','apiName', 'userEmail','Minimum Response Time', 'Maximum Response time', 'Average Time Taken']
+			#headers = ['SerialNo','apiName', 'userEmail','Minimum Response Time', 'Maximum Response time', 'Average Time Taken']
+			headers = ['SerialNo','apiName','Minimum Response Time', 'Maximum Response time', 'Average Time Taken']
 			csvwriter.writerow(headers)
 			IsFirstTime = False
 		csvwriter.writerow(csvdata)
-		print("SNo: {}, apiName: {}, userEmail: {}, MinRspTime: {},MaxRspTime: {},AvgRspTime: {}".format(csvdata[0],csvdata[1],csvdata[2],csvdata[3],csvdata[4],csvdata[5]))
+		print("SNo: {}, apiName: {}, MinRspTime: {},MaxRspTime: {},AvgRspTime: {}".format(csvdata[0],csvdata[1],csvdata[2],csvdata[3],csvdata[4]))
 		csvfile.close()
 
 def buildCSVdata(apiId,inputList):
@@ -55,7 +67,7 @@ def buildCSVdata(apiId,inputList):
 	csvData = []
 	csvData.append(count)
 	csvData.append(apiId)
-	csvData.append(userEmail)
+	#csvData.append(userEmail)
 	csvData.append(minTimesecs)
 	csvData.append(maxTimesecs)
 	csvData.append(AvgTimeSecs)
@@ -147,6 +159,48 @@ for row in csv_reader:
 			userEmail = row[5]
 		except ValueError:
 			print ("error","on line",row)
+	elif(row[1]== "samlsso"):
+		try:
+			minTimeSSO.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "tickets"):
+		try:
+			mintimeTICKETS.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "acs"):
+		try:
+			minTimeACS.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "raise-journey"):
+		try:
+			minTimeRJ.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "login"):
+		try:
+			minTimeLIN.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "logout"):
+		try:
+			minTimeLOUT.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "keepsessionalive"):
+		try:
+			minTimeKSL.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
 
 buildCSVdata("getHeroData",minTimeGHD)
 buildCSVdata("priorityIncidents",minTimePI)
@@ -162,3 +216,10 @@ buildCSVdata("serviceRequestReport",minTimeSRR)
 buildCSVdata("priorityServiceRequests",minTimePSR)
 buildCSVdata("getServiceRequest",minTimeGSR)
 buildCSVdata("getDynamicJourneyMetadata",minTimeGDJM)
+buildCSVdata("samlsso",minTimeSSO)
+buildCSVdata("tickets",mintimeTICKETS)
+buildCSVdata("acs",minTimeACS)
+buildCSVdata("raise-journey",minTimeRJ)
+buildCSVdata("login",minTimeLIN)
+buildCSVdata("logout",minTimeLOUT)
+buildCSVdata("keepsessionalive",minTimeKSL)

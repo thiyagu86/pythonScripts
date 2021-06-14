@@ -1,7 +1,7 @@
 import csv
 import os
 import time
-import threading
+from threading import Thread, Lock
 #Required functionality
 #Read input file ()
 from csv import writer
@@ -9,13 +9,19 @@ from csv import writer
 count=1
 URLCount=1
 IsFirstTime=True
-Lock = threading.Lock()
+CSVLock = Lock()
 
 inputFile = 'C:/Users/reach/OneDrive/Desktop/ScriptingWork/CoveRunLogs/vuser_7.log'
 
 #URL files
 samlssoFp=open("samlsso.log","w+")
 ticketsFp=open("tickets.log","w+")
+acsFp=open("acs.log","w+")
+raiseJourneyFP=open("raise-journey.log","w+")
+LoginFp=open("login.log","w+")
+LogoutFp=open("logout.log","w+")
+keepsessionaliveFp=open("keepsessionalive.log","w+")
+
 
 apiId1='getHeroData'
 apiId2='priorityIncidents'
@@ -38,14 +44,20 @@ apiIdList=[apiId1,apiId2,apiId3,apiId4,apiId5,apiId6,apiId7,apiId8,apiId9,apiId1
 
 urlId1='ciamsso.pre1.ciam.vodafone.com/samlsso'
 urlId2='portal/tickets'
-urlIdlist=['samlsso','tickets']
+urlId3='/saml/acs'
+urlId4='portal/raise-journey'
+urlId5='portal/login'
+urlId6='portal/logout'
+urlId7='ciamsso.pre1.ciam.vodafone.com/keepsessionalive?code'
+
+urlIdlist=['samlsso','tickets','acs','raise-journey','login','logout','keepsessionalive']
 
 #urlId1='portal/tickets'
 #urlIdlist=['tickets']
 
 for apiId in apiIdList:
 	filename=apiId + '.log'
-	print(filename)
+	#print(filename)
 	fp=open(filename,"w+")
 	with open(inputFile,'r') as file:
 		for line in file:
@@ -54,6 +66,19 @@ for apiId in apiIdList:
 	fp.close()
 
 #URL data
+
+#for urlId in urlIdlist:
+	#filename=urlId+'.log'
+	#print(filename)
+	#urlfp=open(filename,"w+")
+	#with open(inputFile,'r') as file:
+		#for line in file:
+			#if urlId in line:
+				#urlfp.write(line.strip())
+				#urlfp.write("\n")
+				#urlfp.write(next(file, '').strip())
+				#urlfp.write("\n")
+	#urlfp.close()
 with open(inputFile, 'r') as file:
 	for line in file:
 		if urlId1 in line:
@@ -70,9 +95,55 @@ with open(inputFile, 'r') as file:
 			ticketsFp.write(next(file, '').strip())
 			ticketsFp.write("\n")
 
+with open(inputFile, 'r') as file:
+	for line in file:
+		if urlId3 in line:
+			acsFp.write(line.strip())
+			acsFp.write("\n")
+			acsFp.write(next(file, '').strip())
+			acsFp.write("\n")
+
+with open(inputFile, 'r') as file:
+	for line in file:
+		if urlId4 in line:
+			raiseJourneyFP.write(line.strip())
+			raiseJourneyFP.write("\n")
+			raiseJourneyFP.write(next(file, '').strip())
+			raiseJourneyFP.write("\n")
+
+with open(inputFile, 'r') as file:
+	for line in file:
+		if urlId5 in line:
+			LoginFp.write(line.strip())
+			LoginFp.write("\n")
+			LoginFp.write(next(file, '').strip())
+			LoginFp.write("\n")
+
+with open(inputFile, 'r') as file:
+	for line in file:
+		if urlId6 in line:
+			LogoutFp.write(line.strip())
+			LogoutFp.write("\n")
+			LogoutFp.write(next(file, '').strip())
+			LogoutFp.write("\n")
+
+with open(inputFile, 'r') as file:
+	for line in file:
+		if urlId7 in line:
+			keepsessionaliveFp.write(line.strip())
+			keepsessionaliveFp.write("\n")
+			keepsessionaliveFp.write(next(file, '').strip())
+			keepsessionaliveFp.write("\n")
+
+
 samlssoFp.close()
 ticketsFp.close()
-
+acsFp.close()
+raiseJourneyFP.close()
+LoginFp.close()
+LogoutFp.close()
+keepsessionaliveFp.close()
+#============
 
 #Lines of interest for getHeroData API are transffered to getHeroData File. 
 #start working on the isolating request and response times using internal ID
@@ -84,11 +155,11 @@ def DeleteTempFiles():
     for i in apiIdList:
         filename=i+'.log'
         os.remove(filename)
-        print(filename)
+        #print(filename)
     for i in urlIdlist:
     	filename=i+'.log'
     	os.remove(filename)
-    	print(filename)
+    	#print(filename)
 
 #This function extracts metadata from the https string
 def ParseUrlString(apiId,urlStr,linedata,isUrlProc):
@@ -144,7 +215,8 @@ def findMatchingRespAndCause(urlId,line,tokens,linedata):
 			if all(str in line for str in reqMatch):
 				unstrippedcause=next(respFile, '').strip()
 				#strippedcause=unstrippedcause.lstrip(" 		  ")
-				cause=unstrippedcause.rstrip("\n")
+				Strippedcause=unstrippedcause.rstrip("\n")
+				cause=Strippedcause.split(" ")[1]
 				#print("Cause:",cause)
 				processLoI(urlId,line,linedata,True)
 				linedata.append(cause)
@@ -152,24 +224,25 @@ def findMatchingRespAndCause(urlId,line,tokens,linedata):
 def send2CSV(csvdata):
 
 	global IsFirstTime
-	global Lock
-	filename = "ConsolidatedAPIdata.csv"
-	Lock.acquire()
-	with open(filename, 'a',newline='') as csvfile:
-		csvwriter = csv.writer(csvfile) 
-		if(IsFirstTime == True):
-			headers = ['SerialNo','apiName', 'reqTime', 'responseTime', 'Timetaken','userEmail','userHash','cause']
-			csvwriter.writerow(headers)
-			IsFirstTime = False
-		csvwriter.writerow(csvdata)
-		csvfile.close()
-	Lock.release()
+	global CSVLock
+	with CSVLock:
+		filename = "ConsolidatedAPIdata.csv"
+		#Lock.acquire()
+		with open(filename, 'a',newline='') as csvfile:
+			csvwriter = csv.writer(csvfile) 
+			if(IsFirstTime == True):
+				headers = ['SerialNo','apiName', 'reqTime', 'responseTime', 'Timetaken','userEmail','userHash','cause']
+				csvwriter.writerow(headers)
+				IsFirstTime = False
+			csvwriter.writerow(csvdata)
+			csvfile.close()
+	#Lock.release()
 
 def buildCSVdata(Reqlinedata,Resplinedata):
 	global count
 	if(len(Resplinedata) > 2):
 		if((Reqlinedata[2] == Resplinedata[2]) and (Reqlinedata[3] == Resplinedata[3])):
-			print("Request {}: Api name: {}, Req time: {}, Rsp Time: {}, user-email:{}, userhash:{}".format(count,Reqlinedata[0],Reqlinedata[1],Resplinedata[1],Resplinedata[2],Resplinedata[3]))
+			#print("Request {}: Api name: {}, Req time: {}, Rsp Time: {}, user-email:{}, userhash:{}".format(count,Reqlinedata[0],Reqlinedata[1],Resplinedata[1],Resplinedata[2],Resplinedata[3]))
 			csvdata = []
 			csvdata.append(count)
 			csvdata.append(Reqlinedata[0])
@@ -184,7 +257,7 @@ def buildCSVdata(Reqlinedata,Resplinedata):
 			csvdata.append(Resplinedata[2])
 			csvdata.append(Resplinedata[3])
 			csvdata.append(Resplinedata[4])
-			#print("CsvData: ",csvdata)
+			print("CsvData: ",csvdata)
 			send2CSV(csvdata)
 			count+=1
 
@@ -247,5 +320,5 @@ def consolidatedUrlProcessing():
 #GetHeroDataApi()
 consolidatedApiProcessing()
 #time.sleep(5)
-#consolidatedUrlProcessing()
-#DeleteTempFiles()
+consolidatedUrlProcessing()
+DeleteTempFiles()
