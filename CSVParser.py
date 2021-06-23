@@ -33,6 +33,20 @@ minTimeLIN = []
 minTimeLOUT = []
 minTimeKSL = []
 
+#CIAMData
+mintimeCS = []
+mintimeLC = []
+mintimeAu = []
+mintimeCLO = []
+mintimeCLI = []
+mintimeC = []
+
+#SDWAN data
+mintimePro = []
+minTimeCOP = []
+minTimeOL = []
+minTimeSO = []
+
 userEmail= ""
 
 def Average(dataLst):
@@ -201,6 +215,66 @@ for row in csv_reader:
 			userEmail = row[5]
 		except ValueError:
 			print ("error","on line",row)
+	elif(row[1]== "checksession"):
+		try:
+			mintimeCS.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "logincontext"):
+		try:
+			mintimeLC.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "authorize"):
+		try:
+			mintimeAu.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "clogout"):
+		try:
+			mintimeCLO.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "clogin"):
+		try:
+			mintimeCLI.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "console"):
+		try:
+			mintimeC.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "products"):
+		try:
+			mintimePro.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "createOrderPega"):
+		try:
+			minTimeCOP.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "ordersList"):
+		try:
+			minTimeOL.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
+	elif(row[1]== "select-organization"):
+		try:
+			minTimeSO.append(float(row[4]))
+			userEmail = row[5]
+		except ValueError:
+			print ("error","on line",row)
 
 buildCSVdata("getHeroData",minTimeGHD)
 buildCSVdata("priorityIncidents",minTimePI)
@@ -223,3 +297,15 @@ buildCSVdata("raise-journey",minTimeRJ)
 buildCSVdata("login",minTimeLIN)
 buildCSVdata("logout",minTimeLOUT)
 buildCSVdata("keepsessionalive",minTimeKSL)
+#CIAM data
+buildCSVdata("checksession",mintimeCS)
+buildCSVdata("logincontext",mintimeLC)
+buildCSVdata("authorize",mintimeAu)
+buildCSVdata("clogout",mintimeCLO)
+buildCSVdata("clogin",mintimeCLI)
+buildCSVdata("console",mintimeC)
+#SDWAN data
+buildCSVdata("products",mintimePro)
+buildCSVdata("createOrderPega",minTimeCOP)
+buildCSVdata("ordersList",minTimeOL)
+buildCSVdata("select-organization",minTimeSO)
