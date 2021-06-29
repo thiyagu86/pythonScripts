@@ -12,18 +12,13 @@ IsFirstTime=True
 CSVLock = Lock()
 
 #inputFile = 'C:/Users/reach/OneDrive/Desktop/ScriptingWork/CoveRunLogs/vuser_7.log'
-inputFile = 'C:/Users/reach/OneDrive/Desktop/ScriptingWork/SDWANBulk/vuser_0.log'
+##inputFile = 'C:/Users/reach/OneDrive/Desktop/ScriptingWork/SDWANBulk/vuser_0.log'
+#inputFile = 'E:/UbuntuShare/TempLogs/SDWAN_Logs/28JunLogs/SDWAN_Bulk_TruClient_WEB_9/Paris/35.180.186.59/no_emulation/vuser_combined.log'
+inputFile = 'E:UbuntuShare/TempLogs/SDWAN_Logs/28JunLogs/SDWAN_Bulk_TruClient_WEB_9/London/35.178.173.243/no_emulation/vuser_combined.log'
+#inputFile = 'E:/UbuntuShare/TempLogs/SDWAN_Logs/28JunLogs/SDWAN_Bulk_TruClient_WEB_8_Run711/London/3.10.54.59/no_emulation/vuser_combined.log'
+#inputFile = 'E:/UbuntuShare/TempLogs/SDWAN_Logs/28JunLogs/SDWAN_Bulk_TruClient_WEB_8_Run711/vuser_combined.log'
+
 ciaminputFile = 'C:/Users/reach/OneDrive/Desktop/ScriptingWork/CIAMLogs/vuser_combined.log'
-
-#URL files
-samlssoFp=open("samlsso.log","w+")
-ticketsFp=open("tickets.log","w+")
-acsFp=open("acs.log","w+")
-raiseJourneyFP=open("raise-journey.log","w+")
-LoginFp=open("login.log","w+")
-LogoutFp=open("logout.log","w+")
-keepsessionaliveFp=open("keepsessionalive.log","w+")
-
 
 apiId1='getHeroData'
 apiId2='priorityIncidents'
@@ -44,36 +39,34 @@ apiId14='getDynamicJourneyMetadata'
 apiIdList=[apiId1,apiId2,apiId3,apiId4,apiId5,apiId6,apiId7,apiId8,apiId9,apiId10,apiId11,apiId12,apiId13,apiId14]
 #apiIdList=[apiId9]
 
-urlId1='ciamsso.pre1.ciam.vodafone.com/samlsso'
-urlId2='portal/tickets'
-urlId3='/saml/acs'
-urlId4='portal/raise-journey'
-urlId5='portal/login'
-urlId6='portal/logout'
-urlId7='ciamsso.pre1.ciam.vodafone.com/keepsessionalive?code'
-urlId8='logincontext?sessionDataKey'
-urlId9='v1.0/products'
-urlId10='v1.0/createOrderPega'
-urlId11='v1.0/ordersList'
-urlId12='portal/select-organization'
+urlST1='ciamsso.pre1.ciam.vodafone.com/samlsso'
+urlST2='portal/tickets'
+urlST3='/saml/acs'
+urlST4='portal/raise-journey'
+urlST5='portal/login'
+urlST6='portal/logout'
+urlST7='ciamsso.pre1.ciam.vodafone.com/keepsessionalive?code'
+urlST8='logincontext?sessionDataKey'
+urlST9='v1.0/products'
+urlST10='v1.0/createOrderPega'
+urlST11='v1.0/ordersList'
+urlST12='portal/select-organization'
+
+URLSTList = [urlST1,urlST2,urlST3,urlST4,urlST5,urlST6,urlST7,urlST8,urlST9,urlST10,urlST11,urlST12]
 
 urlIdlistFP=['samlsso','tickets','acs','raise-journey','login','logout','keepsessionalive','logincontext']
-urlIdlistSP=['logincontext','products','createOrderPega','ordersList','select-organization']
+urlIdlistSP=['products','createOrderPega','ordersList','select-organization']
 urlIdlist = urlIdlistFP + urlIdlistSP
 #urlIdlist = ['createOrderPega']
 
+#For CIAM 
 checksessionFp=open("checksession.log","w+")
 logincontextFp=open("logincontext.log","w+") 
 authorizeFp=open("authorize.log","w+")
 clogoutFP=open("clogout.log","w+")
 cloginFp=open("clogin.log","w+")
 consoleFp=open("console.log","w+")
-#For SDWAN
-#logincontextFp gets written down anyway
-productsFp=open("products.log","w+")
-createOrderPegaFp=open("createOrderPega.log","w+")
-ordersListFp=open("ordersList.log","w+")
-selectorganizationFp=open("select-organization.log","w+")
+
 
 ciamurlId1 = 'oidc/checksession'
 ciamurlId2 = 'logincontext?sessionDataKey'
@@ -96,134 +89,6 @@ for apiId in apiIdList:
 			if (apiId in line):
 				fp.write(line)
 	fp.close()
-
-#URL data
-
-#for urlId in urlIdlist:
-	#filename=urlId+'.log'
-	#print(filename)
-	#urlfp=open(filename,"w+")
-	#with open(inputFile,'r') as file:
-		#for line in file:
-			#if urlId in line:
-				#urlfp.write(line.strip())
-				#urlfp.write("\n")
-				#urlfp.write(next(file, '').strip())
-				#urlfp.write("\n")
-	#urlfp.close()
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId1 in line:
-			samlssoFp.write(line.strip())
-			samlssoFp.write("\n")
-			samlssoFp.write(next(file, '').strip())
-			samlssoFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId2 in line:
-			ticketsFp.write(line.strip())
-			ticketsFp.write("\n")
-			ticketsFp.write(next(file, '').strip())
-			ticketsFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId3 in line:
-			acsFp.write(line.strip())
-			acsFp.write("\n")
-			acsFp.write(next(file, '').strip())
-			acsFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId4 in line:
-			raiseJourneyFP.write(line.strip())
-			raiseJourneyFP.write("\n")
-			raiseJourneyFP.write(next(file, '').strip())
-			raiseJourneyFP.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId5 in line:
-			LoginFp.write(line.strip())
-			LoginFp.write("\n")
-			LoginFp.write(next(file, '').strip())
-			LoginFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId6 in line:
-			LogoutFp.write(line.strip())
-			LogoutFp.write("\n")
-			LogoutFp.write(next(file, '').strip())
-			LogoutFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId7 in line:
-			keepsessionaliveFp.write(line.strip())
-			keepsessionaliveFp.write("\n")
-			keepsessionaliveFp.write(next(file, '').strip())
-			keepsessionaliveFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId8 in line:
-			logincontextFp.write(line.strip())
-			logincontextFp.write("\n")
-			logincontextFp.write(next(file, '').strip())
-			logincontextFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId9 in line:
-			productsFp.write(line.strip())
-			productsFp.write("\n")
-			productsFp.write(next(file, '').strip())
-			productsFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	fileMatch = ['headers',urlId10]
-	for line in file:
-		if all(str in line for str in fileMatch):
-			#print(line)
-			createOrderPegaFp.write(line.strip())
-			createOrderPegaFp.write("\n")
-			createOrderPegaFp.write(next(file, '').strip())
-			#print("Next:")
-			#print(next(file, ''))
-			createOrderPegaFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId11 in line:
-			ordersListFp.write(line.strip())
-			ordersListFp.write("\n")
-			ordersListFp.write(next(file, '').strip())
-			ordersListFp.write("\n")
-
-with open(inputFile, 'r') as file:
-	for line in file:
-		if urlId12 in line:
-			selectorganizationFp.write(line.strip())
-			selectorganizationFp.write("\n")
-			selectorganizationFp.write(next(file, '').strip())
-			selectorganizationFp.write("\n")
-
-samlssoFp.close()
-ticketsFp.close()
-acsFp.close()
-raiseJourneyFP.close()
-LoginFp.close()
-LogoutFp.close()
-keepsessionaliveFp.close()
-#logincontextFp.close()
-productsFp.close()
-createOrderPegaFp.close()
-ordersListFp.close()
-selectorganizationFp.close()
-#============
 
 #CIAM URL PART
 with open(ciaminputFile, 'r') as file:
@@ -281,13 +146,31 @@ clogoutFP.close()
 cloginFp.close()
 consoleFp.close()
 
-#SDWAN URL PART
-
 #####
 #Lines of interest for getHeroData API are transffered to getHeroData File. 
 #start working on the isolating request and response times using internal ID
 timestr="ms"
 NA="Not applicable"
+
+
+def ExtractURLLines():
+	count = 0
+	for i in urlIdlist:
+		URLST = URLSTList[count]
+		urlID = i
+		filename=i+'.log'
+		FP=open(filename,"w+")
+		#print("URLId is: ", urlID, "URLST is: ",URLST,"filename is: ",filename)
+		fileMatch = ['headers',URLST]
+		with open(inputFile, 'r') as file:
+			for line in file:
+				if all(str in line for str in fileMatch):
+					FP.write(line.strip())
+					FP.write("\n")
+					FP.write(next(file, '').strip())
+					FP.write("\n")
+		count+=1
+		FP.close()
 
 #delete temp files
 def DeleteTempFiles():
@@ -299,6 +182,11 @@ def DeleteTempFiles():
     	filename=i+'.log'
     	os.remove(filename)
     	#print(filename)
+
+def DeleteExistingCSVop():
+	filename='ConsolidatedAPIdata.csv'
+	if os.path.exists(filename):
+		os.remove(filename)
 
 #This function extracts metadata from the https string
 def ParseUrlString(apiId,urlStr,linedata,isUrlProc):
@@ -327,7 +215,6 @@ def processLoI(apiId,line,linedata,isUrlProc=False):
 	urlStr = url[0]
 	linedata.append(StrippedTime)
 	ParseUrlString(apiId,urlStr,linedata,isUrlProc)
-
 	#print("ApiID: {}, Time: {}, Email: {}, userHash: {}".format(linedata[0],linedata[1],linedata[2],linedata[3]))
 
 #This function will find the matching response for the given
@@ -400,6 +287,7 @@ def buildCSVdata(Reqlinedata,Resplinedata):
 			csvdata.append(Resplinedata[3])
 			csvdata.append(Resplinedata[4])
 			print("CsvData: ",csvdata)
+			time.sleep(0.05)
 			send2CSV(csvdata)
 			count+=1
 
@@ -423,6 +311,7 @@ def buildURLCSVData(Reqlinedata,Resplinedata):
 		csvdata.append(Resplinedata[3])
 		csvdata.append(Resplinedata[4])
 		print("CsvData: ",csvdata)
+		time.sleep(0.05)
 		send2CSV(csvdata)
 		count+=1
 
@@ -444,6 +333,7 @@ def consolidatedApiProcessing():
 					buildCSVdata(Reqlinedata,Resplinedata)
 
 def consolidatedUrlProcessing():
+	ExtractURLLines()
 	global urlIdlist
 	length = len(urlIdlist)
 	for i in range(length):
@@ -482,10 +372,11 @@ def consolidatedProcessingForCIAM():
 
 #getPriorityIncidentApi()
 #GetHeroDataApi()
-#consolidatedApiProcessing()
+DeleteExistingCSVop()
+consolidatedApiProcessing()
 #time.sleep(5)
 consolidatedUrlProcessing()
 #time.sleep(5)
 #consolidatedProcessingForCIAM()
-#consolidatedProcessingForSDWAN()
 DeleteTempFiles()
+#ExtractURLLines()

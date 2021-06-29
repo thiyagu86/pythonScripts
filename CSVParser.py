@@ -1,4 +1,6 @@
 import csv
+import os
+
 IsFirstTime=True
 count=1
 
@@ -21,6 +23,11 @@ minTimeSRR = []
 minTimePSR = []
 minTimeGSR = []
 minTimeGDJM = []
+
+def DeleteExistingCSVop():
+	filename='APIStats.csv'
+	if os.path.exists(filename):
+		os.remove(filename)
 
 #URLData
 #urlIdlist=['samlsso','tickets','acs','raise-journey','login','logout','keepsessionalive']
@@ -276,6 +283,7 @@ for row in csv_reader:
 		except ValueError:
 			print ("error","on line",row)
 
+DeleteExistingCSVop()
 buildCSVdata("getHeroData",minTimeGHD)
 buildCSVdata("priorityIncidents",minTimePI)
 buildCSVdata("incidentsReport",minTimeIR)
